@@ -7,8 +7,6 @@ using Demo.Mediatr.Queries;
 using Demo.Mediatr.Commands;
 
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Demo.Controllers;
 
 [Route("api/[controller]")]
@@ -28,8 +26,7 @@ public class PersonController : ControllerBase
     public async Task<IActionResult> Get()
     {
 
-        throw new NotImplementedException();
-        /*
+        //throw new NotImplementedException();        
 
         var result = await _mediator.Send(new GetPeopleQuery());
 
@@ -39,7 +36,7 @@ public class PersonController : ControllerBase
             404 => NotFound(),
             _ => BadRequest(result),
         };
-        */
+        
     }
 
     // GET api/<PersonController>/5
@@ -61,12 +58,12 @@ public class PersonController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post([FromBody] PersonModel model)
     {
-        /*var errors = Validate(model);
+        var errors = Validate(model);
 
         if (errors.Count > 0)
         {
             return BadRequest(errors);
-        }*/
+        }
 
         var result = await _mediator.Send(new InsertPersonCommand(model.Id, model.FirstName, model.LastName));
 
@@ -83,12 +80,12 @@ public class PersonController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Put(int id, [FromBody] PersonModel model)
     {
-        /*var errors = Validate(model);
+        var errors = Validate(model);
 
         if (errors.Count > 0)
         {
             return BadRequest(errors);
-        }*/
+        }
 
         var result = await _mediator.Send(new UpdatePersonCommand(id, model));
 
