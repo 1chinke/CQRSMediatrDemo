@@ -5,11 +5,11 @@ namespace Demo.Repository;
 
 public interface IPersonRepo
 {
-    Task<int> DeletePerson(int id);
-    Task<IEnumerable<PersonModel>> GetPeople();
-    Task<PersonModel> GetPersonById(int id);
-    Task<int> InsertPerson(int id, string? firstName, string? lastName);
-    Task<int> UpdatePerson(int id, PersonModel model);
+    Task<int> Delete(int id);
+    Task<IEnumerable<Person>> GetAll();
+    Task<Person> GetById(int id);
+    Task<int> Insert(int id, string firstName, string lastName);
+    Task<int> Update(int id, Person model);
 
     IDbConnection GetConnection();
 }

@@ -2,4 +2,4 @@
 
 namespace Demo.Responses;
 
-public record PeopleResponse(IEnumerable<PersonModel>? Result = null, int StatusCode = 200, string Error = "");
+public record PeopleResponse(IEnumerable<Person> Result = null, int StatusCode = 200, string Error = "");

@@ -42,6 +42,8 @@ try
 
     //vmo: DI'lar buraya ekleniyor
     builder.Services.AddSingleton<IPersonRepo, PersonRepo>();
+    builder.Services.AddSingleton<IKullaniciRepo, KullaniciRepo>();
+
     builder.Services.AddMediatR(typeof(MediatrEntryPoint).Assembly); //bunun için nugetten mediatr.dependencyinjection paketini eklemek gerekiyor.
                                                                      //MediatrEntryPoint: Mediatr dizinindeki boþ class
     builder.Services.AddValidatorsFromAssembly(typeof(DomainValidationEntryPoint).Assembly);

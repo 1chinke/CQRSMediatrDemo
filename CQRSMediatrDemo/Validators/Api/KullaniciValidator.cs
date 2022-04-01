@@ -3,11 +3,18 @@ using FluentValidation;
 
 namespace Demo.Validators.Api;
 
-public class PersonValidator : AbstractValidator<Person>
+public class KullaniciValidator : AbstractValidator<Kullanici>
 {
-    public PersonValidator()
+    public KullaniciValidator()
     {
-        RuleFor(p => p.Id).NotEmpty().WithMessage("{PropertyName} 0 ya da null olamaz");
+        RuleFor(p => p.Username).NotEmpty().WithMessage("{PropertyName} boş geçilemez.");
+
+        RuleFor(p => p.Password).NotEmpty().WithMessage("{PropertyName} boş geçilemez.");
+
+        RuleFor(p => p.EmailAddress).NotEmpty().WithMessage("{PropertyName} boş geçilemez.")
+            .EmailAddress().WithMessage("{PropertyValue} geçerli bir e-posta adresi değil.");
+
+        RuleFor(p => p.Role).NotEmpty().WithMessage("{PropertyName} boş geçilemez.");
 
         RuleFor(p => p.FirstName)
             .Cascade(CascadeMode.Stop)

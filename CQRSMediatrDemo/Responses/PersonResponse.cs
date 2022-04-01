@@ -2,4 +2,4 @@
 
 namespace Demo.Responses;
 
-public record PersonResponse(PersonModel? Result = null, int StatusCode = 200, string Error = "");
+public record PersonResponse(Person Result = null, int StatusCode = 200, string Error = "");

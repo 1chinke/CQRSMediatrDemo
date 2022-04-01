@@ -1,24 +1,24 @@
 ﻿using MediatR;
-using Demo.Mediatr.Queries;
+using Demo.Mediatr.Queries.PersonQueries;
 using Demo.Repository;
 using Demo.Responses;
 
-namespace Demo.Mediatr.Handlers;
+namespace Demo.Mediatr.Handlers.PersonHandlers;
 
-public class GetPersonByIdHandler : IRequestHandler<GetPersonByIdQuery, PersonResponse>
+public class GetPersonByIdHnd : IRequestHandler<GetPersonById, PersonResponse>
 {
     private readonly IPersonRepo _repo;
 
-    public GetPersonByIdHandler(IPersonRepo repo)
+    public GetPersonByIdHnd(IPersonRepo repo)
     {
         _repo = repo;
     }
 
-    public async Task<PersonResponse> Handle(GetPersonByIdQuery request, CancellationToken cancellationToken)
+    public async Task<PersonResponse> Handle(GetPersonById request, CancellationToken cancellationToken)
     {
         try
         {
-            var result = await _repo.GetPersonById(request.Id);
+            var result = await _repo.GetById(request.Id);
 
             if (result == null)
             {

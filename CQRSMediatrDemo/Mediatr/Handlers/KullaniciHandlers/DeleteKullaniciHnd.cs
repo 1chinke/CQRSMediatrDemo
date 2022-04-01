@@ -1,27 +1,27 @@
-﻿using Demo.Mediatr.Commands;
+﻿using Demo.Mediatr.Commands.KullaniciCommands;
 using Demo.Repository;
 using Demo.Responses;
 using MediatR;
 
-namespace Demo.Mediatr.Handlers;
+namespace Demo.Mediatr.Handlers.KullaniciHandlers;
 
-public class DeletePersonHandler : IRequestHandler<DeletePersonCommand, GenericResponse>
+public class DeleteKullaniciHnd : IRequestHandler<DeleteKullanici, GenericResponse>
 {
 
-    private readonly IPersonRepo _repo;
+    private readonly IKullaniciRepo _repo;
 
-    public DeletePersonHandler(IPersonRepo repo)
+    public DeleteKullaniciHnd(IKullaniciRepo repo)
     {
         _repo = repo;
 
     }
 
-    public async Task<GenericResponse> Handle(DeletePersonCommand request, CancellationToken cancellationToken)
+    public async Task<GenericResponse> Handle(DeleteKullanici request, CancellationToken cancellationToken)
     {
         using var transaction = _repo.GetConnection().BeginTransaction();
         try
         {
-            var result = await _repo.DeletePerson(request.Id);
+            var result = await _repo.Delete(request.Username);
             transaction.Commit();
 
             if (result == 0)

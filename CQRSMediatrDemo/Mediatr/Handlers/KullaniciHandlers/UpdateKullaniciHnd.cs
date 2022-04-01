@@ -1,27 +1,27 @@
-﻿using Demo.Mediatr.Commands;
+﻿using Demo.Mediatr.Commands.KullaniciCommands;
 using Demo.Repository;
 using Demo.Responses;
 using MediatR;
 
 
-namespace Demo.Mediatr.Handlers;
+namespace Demo.Mediatr.Handlers.KullaniciHandlers;
 
-public class UpdatePersonelHandler : IRequestHandler<UpdatePersonCommand, GenericResponse>
+public class UpdateKullanicielHnd : IRequestHandler<UpdateKullanici, GenericResponse>
 {
 
-    private readonly IPersonRepo _repo;
+    private readonly IKullaniciRepo _repo;
 
-    public UpdatePersonelHandler(IPersonRepo repo)
+    public UpdateKullanicielHnd(IKullaniciRepo repo)
     {
         _repo = repo;
     }
 
-    public async Task<GenericResponse> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
+    public async Task<GenericResponse> Handle(UpdateKullanici request, CancellationToken cancellationToken)
     {
         using var transaction = _repo.GetConnection().BeginTransaction();
         try
         {
-            var result = await _repo.UpdatePerson(request.Id, request.Model);
+            var result = await _repo.Update(request.Username, request.Model);
 
             if (result == 0)
             {
