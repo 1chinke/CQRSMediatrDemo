@@ -2,10 +2,13 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Demo.Validators.Api;
-using FluentValidation.Results;
 using Demo.Mediatr.Queries.KullaniciQueries;
 using Demo.Mediatr.Commands.KullaniciCommands;
-
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using ValidationFailure = FluentValidation.Results.ValidationFailure;
 
 namespace Demo.Controllers;
 
@@ -14,11 +17,13 @@ namespace Demo.Controllers;
 public class KullaniciController : ControllerBase
 {
     private readonly IMediator _mediator;
-    
+    private readonly IConfiguration _configuration;
+       
 
-    public KullaniciController(IMediator mediator)
+    public KullaniciController(IMediator mediator, IConfiguration configuration)
     {
         _mediator = mediator;
+        _configuration = configuration;
     }
 
     // GET: api/<KullaniciController>
@@ -33,7 +38,7 @@ public class KullaniciController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kullanıcı bulunamadı."),
             _ => BadRequest(result),
         };
         
@@ -48,7 +53,7 @@ public class KullaniciController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kullanıcı bulunamadı."),
             _ => BadRequest(result),
         };
     }
@@ -69,14 +74,14 @@ public class KullaniciController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kullanıcı bulunamadı."),
             _ => BadRequest(result),
         };
 
     }
 
     // PUT api/<KullaniciController>/5
-    [HttpPut("{id}")]
+    [HttpPut("{username}")]
     public async Task<IActionResult> Put(string username, [FromBody] Kullanici model)
     {
         var errors = Validate(model);
@@ -91,7 +96,7 @@ public class KullaniciController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kullanıcı bulunamadı."),
             _ => BadRequest(result),
         };        
     }
@@ -106,9 +111,56 @@ public class KullaniciController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kullanıcı bulunamadı."),
             _ => BadRequest(result),
         };
+    }
+
+    // GET api/<KullaniciController>/5
+    [HttpGet("{username},{password}")]
+    public async Task<IActionResult> Login(string username, string password)
+    {
+        var result = await _mediator.Send(new GetKullaniciByUsernameAndPassword(username, password));
+
+        if (result.StatusCode == 200)
+        {
+            var kullanici = result.Result;
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, kullanici.Username),
+                new Claim(ClaimTypes.Role, kullanici.Role),
+                new Claim(ClaimTypes.Email, kullanici.EmailAddress),
+                new Claim(ClaimTypes.GivenName, kullanici.FirstName),
+                new Claim(ClaimTypes.Surname, kullanici.LastName)
+            };
+
+            var token = new JwtSecurityToken
+            (
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(5),
+                notBefore: DateTime.UtcNow,
+                signingCredentials: new SigningCredentials(
+                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
+                    SecurityAlgorithms.HmacSha256)
+            );
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return Ok(tokenString);
+
+
+        }
+        else if (result.StatusCode == 404)
+        {
+            return NotFound("Kullanıcı adı ya da parola hatalı.");
+        }
+        else
+        {
+            return BadRequest(result);
+        }
+
     }
 
     private List<ValidationFailure> Validate(Kullanici model)

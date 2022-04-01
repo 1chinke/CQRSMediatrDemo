@@ -36,6 +36,17 @@ public class KullaniciRepo : IKullaniciRepo
         return await _conn.QueryFirstOrDefaultAsync<Kullanici>(query, param: parameters);
     }
 
+    public async Task<Kullanici> GetByUsernameAndPassword(string username, string password)
+    {
+        string query = @"Select * from kullanici 
+                         Where username = :username and 
+                               password = :password";
+
+        var parameters = new { username, password };
+
+        return await _conn.QueryFirstOrDefaultAsync<Kullanici>(query, param: parameters);
+    }
+
     public async Task<int> Insert(Kullanici model)
     {
         string query = "Insert Into kullanici values(:username ,:password, :emailAddress, :firstName, :lastName, :role)";

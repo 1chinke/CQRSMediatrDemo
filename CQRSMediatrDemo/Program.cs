@@ -4,10 +4,13 @@ using Demo.Repository;
 using Demo.Validators.Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
+using System.Text;
 
 
 // Serilogu iki aþamalý olarak yapýlandýrýyoruz.
@@ -39,6 +42,22 @@ try
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
+
+    //Jwt
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateActor = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+    builder.Services.AddAuthorization();
 
     //vmo: DI'lar buraya ekleniyor
     builder.Services.AddSingleton<IPersonRepo, PersonRepo>();
@@ -73,6 +92,7 @@ try
     }
 
     app.UseAuthorization();
+    app.UseAuthentication();
 
 
     if (!app.Environment.IsDevelopment())

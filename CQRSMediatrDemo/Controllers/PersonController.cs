@@ -33,7 +33,7 @@ public class PersonController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kişi bulunamadı."),
             _ => BadRequest(result),
         };
         
@@ -49,7 +49,7 @@ public class PersonController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kişi bulunamadı."),
             _ => BadRequest(result),
         };
     }
@@ -70,7 +70,7 @@ public class PersonController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kişi bulunamadı."),
             _ => BadRequest(result),
         };
 
@@ -92,7 +92,7 @@ public class PersonController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kişi bulunamadı."),
             _ => BadRequest(result),
         };        
     }
@@ -107,7 +107,7 @@ public class PersonController : ControllerBase
         return result.StatusCode switch
         {
             200 => Ok(result),
-            404 => NotFound(),
+            404 => NotFound("Kişi bulunamadı."),
             _ => BadRequest(result),
         };
     }
