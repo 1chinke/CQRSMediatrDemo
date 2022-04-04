@@ -18,13 +18,6 @@ public class InsertPersonHnd : IRequestHandler<InsertPerson, GenericResponse>
     { 
         try
         {
-            /*var oldPerson = await _repo.GetPersonById(request.Id);
-
-            if (oldPerson != null)
-            {
-                return new GenericResponse(StatusCode: 400, Error: "Bu kayıt zaten tanımlı.");
-            }*/
-
             using var transaction = _repo.GetConnection().BeginTransaction();
             try
             {

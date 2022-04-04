@@ -36,7 +36,7 @@ public class KullaniciRepo : IKullaniciRepo
         return await _conn.QueryFirstOrDefaultAsync<Kullanici>(query, param: parameters);
     }
 
-    public async Task<Kullanici> GetByUsernameAndPassword(string username, string password)
+    public async Task<Kullanici> Login(string username, string password)
     {
         string query = @"Select * from kullanici 
                          Where username = :username and 

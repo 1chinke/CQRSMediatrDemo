@@ -4,10 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Demo.Validators.Api;
 using Demo.Mediatr.Queries.KullaniciQueries;
 using Demo.Mediatr.Commands.KullaniciCommands;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using ValidationFailure = FluentValidation.Results.ValidationFailure;
 
 namespace Demo.Controllers;
@@ -120,36 +116,11 @@ public class KullaniciController : ControllerBase
     [HttpGet("{username},{password}")]
     public async Task<IActionResult> Login(string username, string password)
     {
-        var result = await _mediator.Send(new GetKullaniciByUsernameAndPassword(username, password));
+        var result = await _mediator.Send(new GetLogin(username, password));
 
         if (result.StatusCode == 200)
         {
-            var kullanici = result.Result;
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, kullanici.Username),
-                new Claim(ClaimTypes.Role, kullanici.Role),
-                new Claim(ClaimTypes.Email, kullanici.EmailAddress),
-                new Claim(ClaimTypes.GivenName, kullanici.FirstName),
-                new Claim(ClaimTypes.Surname, kullanici.LastName)
-            };
-
-            var token = new JwtSecurityToken
-            (
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(5),
-                notBefore: DateTime.UtcNow,
-                signingCredentials: new SigningCredentials(
-                    new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
-                    SecurityAlgorithms.HmacSha256)
-            );
-
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return Ok(tokenString);
-
+            return Ok(result.Token);
 
         }
         else if (result.StatusCode == 404)
@@ -160,7 +131,6 @@ public class KullaniciController : ControllerBase
         {
             return BadRequest(result);
         }
-
     }
 
     private List<ValidationFailure> Validate(Kullanici model)
