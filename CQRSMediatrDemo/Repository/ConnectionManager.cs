@@ -11,6 +11,8 @@ public class ConnectionManager
 
     private readonly IDbConnection _conn;
 
+    private static readonly ConnectionManager _instance = new();
+
     private ConnectionManager()
     {
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
@@ -18,7 +20,7 @@ public class ConnectionManager
 
     }
 
-    private static readonly ConnectionManager _instance = new();
+   
 
 
     public static ConnectionManager GetInstance() => _instance;

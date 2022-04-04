@@ -19,7 +19,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     {
         //pre logic
 
-        _logger.LogInformation("From Mediatr Behavior: {Request} is starting", request.GetType().Name);
+        _logger.LogInformation("{Request} is starting", request.GetType().Name);
 
         var timer = Stopwatch.StartNew();
 
@@ -31,7 +31,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         
         timer.Stop();
         
-        _logger.LogInformation("From Mediatr Behavior: {Request} has finished in {Time} ms.", request.GetType().Name, timer.ElapsedMilliseconds);
+        _logger.LogInformation("{Request} has finished in {Time} ms.", request.GetType().Name, timer.ElapsedMilliseconds);
 
         return response;
     }

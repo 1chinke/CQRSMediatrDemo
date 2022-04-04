@@ -24,9 +24,7 @@ public class PersonController : ControllerBase
     // GET: api/<PersonController>
     [HttpGet]
     public async Task<IActionResult> Get()
-    {
-
-        //throw new NotImplementedException();        
+    {       
 
         var result = await _mediator.Send(new GetPeople());
 
@@ -41,7 +39,6 @@ public class PersonController : ControllerBase
 
     // GET api/<PersonController>/5
     [HttpGet("{id}")]
-    //public async Task<PersonModel> Get(int id)
     public async Task<IActionResult> Get(int id)
     {
         var result = await _mediator.Send(new GetPersonById(id));

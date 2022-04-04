@@ -29,9 +29,10 @@ public class InsertPersonHnd : IRequestHandler<InsertPerson, GenericResponse>
                     return new GenericResponse(StatusCode: 400, Error: "Kaydedilemedi.");
                 }
 
-                
+
                 return new GenericResponse("Başarıyla kaydedildi.");
             }
+
             catch (Exception ex)
             {
                 transaction.Rollback();
