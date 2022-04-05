@@ -113,7 +113,7 @@ public class KullaniciController : ControllerBase
     }
 
     // GET api/<KullaniciController>/5
-    [HttpGet("{username},{password}")]
+    [HttpGet("{username}/{password}")]
     public async Task<IActionResult> Login(string username, string password)
     {
         var result = await _mediator.Send(new GetLogin(username, password));
