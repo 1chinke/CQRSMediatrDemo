@@ -54,7 +54,7 @@ public class PersonRepo : IPersonRepo
             first_name = :firstName, 
             last_name = :lastName 
             Where id = :oldId";
-        var parameters = new { model.Id, model.FirstName, model.LastName, id };
+        var parameters = new { id = model.Id, firstName = model.FirstName, lastName = model.LastName, oldId = id };
 
 
         return await _conn.ExecuteAsync(query, param: parameters);

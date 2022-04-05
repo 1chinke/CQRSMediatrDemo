@@ -5,7 +5,8 @@ using Demo.Validators.Api;
 using FluentValidation.Results;
 using Demo.Mediatr.Queries.PersonQueries;
 using Demo.Mediatr.Commands.PersonCommands;
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Demo.Controllers;
 
@@ -22,7 +23,7 @@ public class PersonController : ControllerBase
     }
 
     // GET: api/<PersonController>
-    [HttpGet]
+    [HttpGet(Name = "GetAllPerson"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Get()
     {       
 
@@ -38,7 +39,7 @@ public class PersonController : ControllerBase
     }
 
     // GET api/<PersonController>/5
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetPersonById"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Get(int id)
     {
         var result = await _mediator.Send(new GetPersonById(id));
@@ -52,7 +53,7 @@ public class PersonController : ControllerBase
     }
 
     // POST api/<PersonController>
-    [HttpPost]
+    [HttpPost(Name = "CreatePerson"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Post([FromBody] Person model)
     {
         var errors = Validate(model);
@@ -74,7 +75,7 @@ public class PersonController : ControllerBase
     }
 
     // PUT api/<PersonController>/5
-    [HttpPut("{id}")]
+    [HttpPut("{id}", Name = "UpdatePerson"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public async Task<IActionResult> Put(int id, [FromBody] Person model)
     {
         var errors = Validate(model);
@@ -95,7 +96,7 @@ public class PersonController : ControllerBase
     }
 
     // DELETE api/<PersonController>/5
-    [HttpDelete("{id}")]
+    [HttpDelete("{id}", Name = "DeletePerson"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     public async Task<IActionResult> Delete(int id)
     {
         var result = await _mediator.Send(new DeletePerson(id));
